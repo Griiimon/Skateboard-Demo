@@ -1,0 +1,61 @@
+[gd_scene load_steps=9 format=3 uid="uid://ddb8rpk06cuv5"]
+
+[ext_resource type="PackedScene" uid="uid://dx5g8uuckqnb8" path="res://skater.tscn" id="1_0s4vn"]
+
+[sub_resource type="Gradient" id="Gradient_owvkw"]
+offsets = PackedFloat32Array(0, 0.452381)
+colors = PackedColorArray(0.366595, 0.366595, 0.366595, 1, 0.266575, 0.266575, 0.266575, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_1w58o"]
+noise_type = 0
+frequency = 0.1791
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_y1cm0"]
+color_ramp = SubResource("Gradient_owvkw")
+noise = SubResource("FastNoiseLite_1w58o")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nm4lk"]
+albedo_texture = SubResource("NoiseTexture2D_y1cm0")
+uv1_scale = Vector3(100, 100, 100)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_2fvpd"]
+material = SubResource("StandardMaterial3D_nm4lk")
+size = Vector2(1000, 1000)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lnafu"]
+size = Vector3(500, 0.1, 500)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g08an"]
+albedo_color = Color(0.992157, 0.654902, 0, 1)
+
+[node name="Level" type="Node3D"]
+
+[node name="Floor" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+mesh = SubResource("PlaneMesh_2fvpd")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+shape = SubResource("BoxShape3D_lnafu")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 41.5584, 0)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.934086, -0.357048, 0, 0.357048, 0.934086, 0, 0, -42.723)
+use_collision = true
+size = Vector3(10, 10, 30)
+material = SubResource("StandardMaterial3D_g08an")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]
+transform = Transform3D(-4.37114e-08, 1, 4.37114e-08, 0, -4.37114e-08, 1, 1, 4.37114e-08, 1.91069e-15, -30.6303, -13.408, -33.0429)
+use_collision = true
+radius = 20.0
+height = 30.0
+sides = 64
+material = SubResource("StandardMaterial3D_g08an")
+
+[node name="Skater" parent="." instance=ExtResource("1_0s4vn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.50783, 0)
+gravity_scale = 0.5

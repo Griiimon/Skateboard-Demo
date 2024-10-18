@@ -1,0 +1,68 @@
+[gd_scene load_steps=9 format=3 uid="uid://dx5g8uuckqnb8"]
+
+[ext_resource type="Script" path="res://skater.gd" id="1_1lghl"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_w282j"]
+friction = 0.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_roaq8"]
+radius = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0vluu"]
+albedo_color = Color(0.443137, 1, 0.443137, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5ybef"]
+material = SubResource("StandardMaterial3D_0vluu")
+size = Vector3(0.3, 0.05, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_15opy"]
+size = Vector3(0.1, 0.8, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vsrf2"]
+size = Vector3(0.3, 0.6, 0.7)
+
+[sub_resource type="SphereMesh" id="SphereMesh_kk4em"]
+radius = 0.2
+height = 0.4
+
+[node name="Skater" type="RigidBody3D"]
+collision_layer = 2
+physics_material_override = SubResource("PhysicsMaterial_w282j")
+gravity_scale = 0.2
+continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 10
+linear_damp_mode = 1
+angular_damp_mode = 1
+script = ExtResource("1_1lghl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_roaq8")
+
+[node name="Skater Model" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="Skater Model"]
+transform = Transform3D(1, 0, 0, 0, 0.966975, 0.254872, 0, -0.254872, 0.966975, 0, 2.26406, 4.78593)
+
+[node name="Board" type="MeshInstance3D" parent="Skater Model"]
+mesh = SubResource("BoxMesh_5ybef")
+
+[node name="Leg" type="MeshInstance3D" parent="Skater Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.431, 0.25)
+mesh = SubResource("BoxMesh_15opy")
+
+[node name="Leg2" type="MeshInstance3D" parent="Skater Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.431, -0.25)
+mesh = SubResource("BoxMesh_15opy")
+
+[node name="Torso" type="MeshInstance3D" parent="Skater Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.984813, 0)
+mesh = SubResource("BoxMesh_vsrf2")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Skater Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.47332, 0)
+mesh = SubResource("SphereMesh_kk4em")
+
+[node name="RayCast3D" type="RayCast3D" parent="Skater Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.630771, 0)
