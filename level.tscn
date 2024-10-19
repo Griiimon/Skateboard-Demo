@@ -37,6 +37,7 @@ material = SubResource("StandardMaterial3D_g08an")
 top_radius = 40.0
 bottom_radius = 40.0
 height = 30.0
+radial_segments = 128
 
 [node name="Level" type="Node3D"]
 
