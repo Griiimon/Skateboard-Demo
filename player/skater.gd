@@ -22,10 +22,11 @@ func _integrate_forces(state):
 	state_machine.on_integrate_forces(state)
 
 
-func update_model_position(delta: float, floor_align_factor: float= 10.0):
+func update_model_position(delta: float, y_align: bool= true, floor_align_factor: float= 10.0):
 	models.position= global_position
 	
-	floor_align(delta * floor_align_factor)
+	if y_align:
+		floor_align(delta * floor_align_factor)
 
 
 func floor_align(weight: float):

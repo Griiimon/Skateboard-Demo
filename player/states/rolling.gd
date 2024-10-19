@@ -20,7 +20,7 @@ func on_enter():
 
 
 func on_process(delta: float):
-	skater.update_model_position(delta, 1.0)
+	skater.update_model_position(delta, true, 1.0)
 	
 	if skater.linear_velocity and not is_equal_approx(abs(skater.linear_velocity.normalized().dot(skater.models.basis.y)), 1.0):
 		skater.models.transform= skater.models.transform.interpolate_with(skater.models.transform.looking_at(skater.models.position + skater.linear_velocity.normalized(), skater.models.basis.y), delta * 10)

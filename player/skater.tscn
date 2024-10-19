@@ -115,3 +115,7 @@ brake_factor = 2.0
 [node name="Flying" type="Node" parent="State Machine"]
 script = ExtResource("5_ax7pu")
 gravity_scale = 1.0
+
+[node name="Align Delay" type="Timer" parent="State Machine/Flying"]
+wait_time = 0.5
+one_shot = true
