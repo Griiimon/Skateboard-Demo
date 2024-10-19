@@ -1,0 +1,117 @@
+[gd_scene load_steps=15 format=3 uid="uid://dx5g8uuckqnb8"]
+
+[ext_resource type="Script" path="res://player/skater.gd" id="1_1lghl"]
+[ext_resource type="Script" path="res://player/player_state_machine.gd" id="2_4sdo8"]
+[ext_resource type="Script" path="res://player/states/standing.gd" id="3_52xkm"]
+[ext_resource type="Script" path="res://player/states/rolling.gd" id="4_mqgda"]
+[ext_resource type="Script" path="res://player/states/flying.gd" id="5_ax7pu"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_w282j"]
+friction = 0.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_roaq8"]
+radius = 0.2
+
+[sub_resource type="BoxMesh" id="BoxMesh_15opy"]
+size = Vector3(0.1, 0.8, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vsrf2"]
+size = Vector3(0.3, 0.6, 0.7)
+
+[sub_resource type="SphereMesh" id="SphereMesh_kk4em"]
+radius = 0.2
+height = 0.4
+
+[sub_resource type="SphereMesh" id="SphereMesh_x4jad"]
+radius = 0.04
+height = 0.065
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0vluu"]
+albedo_color = Color(0.443137, 1, 0.443137, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5ybef"]
+material = SubResource("StandardMaterial3D_0vluu")
+size = Vector3(0.3, 0.05, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tqv82"]
+size = Vector3(0.3, 0.1, 1)
+
+[node name="Skater" type="RigidBody3D"]
+collision_layer = 2
+physics_material_override = SubResource("PhysicsMaterial_w282j")
+gravity_scale = 0.2
+can_sleep = false
+freeze_mode = 1
+continuous_cd = true
+contact_monitor = true
+max_contacts_reported = 10
+linear_damp_mode = 1
+angular_damp_mode = 1
+script = ExtResource("1_1lghl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_roaq8")
+
+[node name="Models" type="Node3D" parent="."]
+
+[node name="Figure Platform" type="Node3D" parent="Models"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Leg" type="MeshInstance3D" parent="Models/Figure Platform"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.25, 0.431, -1.09278e-08)
+mesh = SubResource("BoxMesh_15opy")
+skeleton = NodePath("../..")
+
+[node name="Leg2" type="MeshInstance3D" parent="Models/Figure Platform"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.25, 0.431, 1.09278e-08)
+mesh = SubResource("BoxMesh_15opy")
+skeleton = NodePath("../..")
+
+[node name="Torso" type="MeshInstance3D" parent="Models/Figure Platform"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.984813, 0)
+mesh = SubResource("BoxMesh_vsrf2")
+skeleton = NodePath("../../..")
+
+[node name="Head" type="MeshInstance3D" parent="Models/Figure Platform"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 1.47332, 0)
+mesh = SubResource("SphereMesh_kk4em")
+skeleton = NodePath("../..")
+
+[node name="Nose" type="MeshInstance3D" parent="Models/Figure Platform/Head"]
+transform = Transform3D(1, 0, 3.55271e-15, 0, 1, 0, -3.55271e-15, 0, 1, -0.208039, 0, 9.09366e-09)
+mesh = SubResource("SphereMesh_x4jad")
+skeleton = NodePath("../../..")
+
+[node name="Board" type="MeshInstance3D" parent="Models"]
+mesh = SubResource("BoxMesh_5ybef")
+
+[node name="Camera3D" type="Camera3D" parent="Models"]
+transform = Transform3D(1, 0, 0, 0, 0.966975, 0.254872, 0, -0.254872, 0.966975, 0, 2.26406, 4.78593)
+
+[node name="Floor RayCast" type="RayCast3D" parent="Models"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.630771, 0)
+
+[node name="Floor ShapeCast" type="ShapeCast3D" parent="Models"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+shape = SubResource("BoxShape3D_tqv82")
+target_position = Vector3(0, -0.6, 0)
+
+[node name="State Machine" type="Node" parent="." node_paths=PackedStringArray("current_state")]
+script = ExtResource("2_4sdo8")
+current_state = NodePath("Flying")
+debug = true
+
+[node name="Standing" type="Node" parent="State Machine"]
+script = ExtResource("3_52xkm")
+
+[node name="Rolling" type="Node" parent="State Machine"]
+script = ExtResource("4_mqgda")
+push_force = 2.0
+brake_factor = 2.0
+
+[node name="Flying" type="Node" parent="State Machine"]
+script = ExtResource("5_ax7pu")
+gravity_scale = 1.0
